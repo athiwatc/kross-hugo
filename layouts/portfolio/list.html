@@ -57,8 +57,8 @@
 
 <div id="links" style="max-width: 1012px; margin: 0 auto;">
   {{ range .Data.Pages }}
-  <a href="{{.Params.image | absURL }}" title="{{ .Title }}">
-    <img src="{{.Params.image | absURL }}" width="250px" height="250px" alt="{{ .Title }}" style="object-fit: cover" />
+  <a href="{{.Params.image | absURL }}?full" title="{{ .Title }}">
+    <img src="{{.Params.image | absURL }}?thumbnail" width="250px" height="250px" alt="{{ .Title }}" style="object-fit: cover" />
   </a>
   {{ end }}
 </div>
