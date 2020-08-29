@@ -1,52 +1,77 @@
 {{ define "main" }}
 
 {{ partial "page-title.html" . }}
-
+<link rel="stylesheet" href="/css/blueimp-gallery.min.css" />
 <!-- portfolio -->
-<section class="section">
-  <div class="container">
-    <div class="row mb-5">
-      <div class="col-12">
-        <div class="btn-group btn-group-toggle justify-content-center d-flex flex-wrap" data-toggle="buttons">
-          <label class="btn btn-sm btn-primary active">
-            <input type="radio" name="shuffle-filter" value="all" checked="checked" />All
-          </label>
-					{{ $categories := slice }}
-					{{ range .Data.Pages }}
-					{{ range .Params.categories }}
-					{{ $categories = $categories | append . }}
-					{{ end }}
-					{{ end }}
-					{{ range ( $categories | uniq ) }}
-          <label class="btn btn-sm btn-primary">
-            <input type="radio" name="shuffle-filter" value="{{ . | urlize }}" />{{ . | humanize }}
-          </label>
-          {{ end }}
-        </div>
-      </div>
-    </div>
-    <div class="row shuffle-wrapper">
-      {{ range .Data.Pages }}
-      <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[{{range $index, $element:= .Params.categories }}{{if ne $index 0}},{{end}}&quot;{{. | urlize}}&quot;{{ end }}]">
-        <div class="position-relative rounded hover-wrapper">
-          <img src="{{.Params.image | absURL }}" alt="portfolio-image" class="img-fluid rounded w-100 d-block">
-          <div class="hover-overlay">
-            <div class="hover-content">
-              <a class="btn btn-light btn-sm" href="{{ .Permalink }}">view project</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      {{ end }}
-    </div>
-  </div>
-</section>
-<!-- /portfolio -->
+<div
+        id="blueimp-gallery"
+        class="blueimp-gallery"
+        aria-label="image gallery"
+        aria-modal="true"
+        role="dialog"
+>
+  <div class="slides" aria-live="polite"></div>
+  <h3 class="title"></h3>
+  <a
+          class="prev"
+          aria-controls="blueimp-gallery"
+          aria-label="previous slide"
+          aria-keyshortcuts="ArrowLeft"
+  ></a>
+  <a
+          class="next"
+          aria-controls="blueimp-gallery"
+          aria-label="next slide"
+          aria-keyshortcuts="ArrowRight"
+  ></a>
+  <a
+          class="close"
+          aria-controls="blueimp-gallery"
+          aria-label="close"
+          aria-keyshortcuts="Escape"
+  ></a>
+  <a
+          class="play-pause"
+          aria-controls="blueimp-gallery"
+          aria-label="play slideshow"
+          aria-keyshortcuts="Space"
+          aria-pressed="false"
+          role="button"
+  ></a>
+  <ol class="indicator"></ol>
+</div>
 
-<section class="section bg-light">
-  <div class="container">
-    {{ partial "client-slider.html" . }}
-  </div>
-</section>
 
+<!--{{ range .Data.Pages }}-->
+<!--<div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[{{range $index, $element:= .Params.categories }}{{if ne $index 0}},{{end}}&quot;{{. | urlize}}&quot;{{ end }}]">-->
+<!--  <div class="position-relative rounded hover-wrapper">-->
+<!--    <img src="{{.Params.image | absURL }}" alt="portfolio-image" class="img-fluid rounded w-100 d-block">-->
+<!--    <div class="hover-overlay">-->
+<!--      <div class="hover-content">-->
+<!--        <a class="btn btn-light btn-sm" href="{{ .Permalink }}">view project</a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+<!--{{ end }}-->
+
+<div id="links" style="max-width: 1012px; margin: 0 auto;">
+  {{ range .Data.Pages }}
+  <a href="{{.Params.image | absURL }}" title="{{ .Title }}">
+    <img src="{{.Params.image | absURL }}" width="250px" height="250px" alt="{{ .Title }}" style="object-fit: cover" />
+  </a>
+  {{ end }}
+</div>
+
+<script src="/js/blueimp-gallery.min.js"></script>
+<script>
+  document.getElementById('links').onclick = function (event) {
+    event = event || window.event
+    var target = event.target || event.srcElement
+    var link = target.src ? target.parentNode : target
+    var options = { index: link, event: event }
+    var links = this.getElementsByTagName('a')
+    blueimp.Gallery(links, options)
+  }
+</script>
 {{ end }}
